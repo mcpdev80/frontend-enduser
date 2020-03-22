@@ -95,64 +95,22 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       startTime: selectedTime,
                     ));
                     debugPrint("Make Reservation finished");
-                    return BlocBuilder<ReservationsBloc, ReservationsState>(
-                        builder: (context, state) {
-                          debugPrint("In bloc builder");
-                          if (state is ReservationsInitial) {
-                            return Container();
+                    bool error;
+                    BlocListener<ReservationsBloc, ReservationsState>(
+                        listener: (context, state) {
+                          if (state is ReservationsLoaded) {
+                            error = state.error;
                           }
-                          else if (state is ReservationsLoading) {
-                            debugPrint("ReservationsLoading");
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          else if (state is ReservationsLoaded) {
-                            if (state.error) {
-                              debugPrint("Snackbar should show up");
-                              return SnackBar(
-                                content: Text("Error"),
-                              );
-                            }
-                            else {
-                              debugPrint("AlertDialog should show up");
-                              var name = widget.location.name;
-                              var startTime = selectedTime;
-                              final DateFormat dateFormat = DateFormat("dd.MM.yyyy");
-                              final DateFormat timeFormat = DateFormat("hh:mm");
-                              return AlertDialog(
-                                //title: Text('Reservation successful'),
-                                title: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text('Reservation successfull'),
-                                    ),
-                                    Icon(Icons.check),
-                                  ],
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text('Du hast am ${dateFormat.format(startTime)} um ${timeFormat.format(startTime)} einen Shopping-Slot bei ${name} reserviert.'),
-                                  ],
-                                ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('OK'),
-                                  )
-                                ],
-                              );
-                            }
-                          }
-                          return Container();
-                        }
-
+                          },
                     );
+                    if (error) {
+                      return SnackBar(
+                        content: Text("Hi"),
+                      );
+                    }
+                    else {
+                      return Container();// change to
+                    }
                   },
                 ),
               ),
