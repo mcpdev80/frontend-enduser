@@ -117,6 +117,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                               listener: (context, state) {
                                 if (state is ReservationsLoaded) {
                                   if (state.error) {
+                                    print('state Error');
                                     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Error'),));
                                   }
                                   else {
@@ -142,13 +143,6 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
     );
   }
 }
-
-
-
-
-
-
-
 
 class _ChangeDateButton extends StatelessWidget {
   final String title;
