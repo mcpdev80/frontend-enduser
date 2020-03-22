@@ -20,6 +20,7 @@ class LocationDetailSheet extends StatefulWidget {
 class _LocationDetailSheetState extends State<LocationDetailSheet> {
   DateTime barplotDate = DateTime.now();
   DateTime selectedTime;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -95,27 +96,30 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       startTime: selectedTime,
                     ));
                     debugPrint("Make Reservation finished");
-                    bool error;
                     BlocListener<ReservationsBloc, ReservationsState>(
                         listener: (context, state) {
-                          if (state is ReservationsLoaded) {
-                            error = state.error;
-                          }
+                            if (state is ReservationsLoaded) {
+                              if (state.error) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Error'),));
+                              }
+                              else {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ReservationConfirmationDialog(
+                                        widget.location.name, selectedTime);
+                                  },
+                                );
+                              }
+                            }
                           },
                     );
-                    if (error) {
-                      return SnackBar(
-                        content: Text("Hi"),
-                      );
                     }
-                    else {
-                      return Container();// change to
-                    }
-                  },
+                    )
                 ),
               ),
-            )
-          ]),
+          ],
+      ),
     );
   }
 }
