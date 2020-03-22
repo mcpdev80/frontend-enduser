@@ -33,7 +33,7 @@ class ReservationsRepository {
     return [];
   }
 
-  Future<void> createReservation({
+  Future<bool> createReservation({
     @required String deviceId,
     @required int locationId,
     @required DateTime startTime,
@@ -48,8 +48,10 @@ class ReservationsRepository {
 
     if (response.statusCode == 200) {
       print('createReservation: success');
+      return false;
     } else {
       print('createReservation: error ${response.statusCode}');
+      return true;
     }
   }
 

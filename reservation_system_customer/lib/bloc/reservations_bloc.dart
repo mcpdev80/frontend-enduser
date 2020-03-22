@@ -48,8 +48,9 @@ class ReservationsLoading extends ReservationsState {}
 
 class ReservationsLoaded extends ReservationsState {
   final List<Reservation> reservations;
+  final bool error;
 
-  ReservationsLoaded(this.reservations);
+  ReservationsLoaded(this.reservations, {this.error});
 
   List<Object> get props => reservations;
 }
@@ -86,7 +87,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
       );
       yield ReservationsLoaded(reservations);
     } else if (event is MakeReservation) {
-      await _reservationsRepository.createReservation(
+      bool error = await _reservationsRepository.createReservation(
         deviceId: deviceId,
         locationId: event.locationId,
         startTime: event.startTime,
@@ -95,7 +96,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
       final reservations = await _reservationsRepository.getReservations(
         deviceId: deviceId,
       );
-      yield ReservationsLoaded(reservations);
+      yield ReservationsLoaded(reservations, error: error);
     }
   }
 }
